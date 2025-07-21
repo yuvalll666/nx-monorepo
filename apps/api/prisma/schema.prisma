@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())  // Primary key, unique ID
+  email     String    @unique               // User's email, unique
+  password  String                        // Hashed password
+  decks     Deck[]                      // One-to-many relation: user has many decks
+  createdAt DateTime  @default(now())    // Timestamp of creation
+  updatedAt DateTime  @updatedAt         // Timestamp of last update
+}
+
+model Deck {
+  id        String    @id @default(uuid())  // Primary key
+  title     String                         // Deck title/name
+  user      User      @relation(fields: [userId], references: [id]) // Owner user relation
+  userId    String                         // FK to user table
+  cards     Card[]                         // One-to-many relation: deck has many cards
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Card {
+  id          String    @id @default(uuid()) // Primary key
+  front       String                          // Front side content (question/prompt)
+  back        String                          // Back side content (answer/explanation)
+  deck        Deck      @relation(fields: [deckId], references: [id]) // Parent deck
+  deckId      String                          // FK to deck table
+  tags        String[]                        // Tags for categorization/search
+  interval    Int       @default(1)           // Days between reviews (spaced repetition)
+  dueDate     DateTime?                       // Next review date
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
