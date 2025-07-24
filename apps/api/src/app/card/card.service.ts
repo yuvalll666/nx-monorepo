@@ -3,7 +3,7 @@ import { PrismaService } from "../../prisma/prisma.service";
 import { CreateCardDto, UpdateCardDto } from "@shared/types";
 
 @Injectable()
-export class CardsService {
+export class CardService {
     constructor(private prisma: PrismaService) {}
 
     async getAllCards() {

@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
-import { CardsService } from "./cards.service";
+import { CardService } from "./card.service";
 import { Card } from "./models";
 import {
     CreateCardDto,
@@ -10,8 +10,8 @@ import {
 import { CreateCardInput, UpdateCardInput } from "./dto";
 
 @Resolver(() => Card)
-export class CardsResolver {
-    constructor(private readonly cardsService: CardsService) {}
+export class CardResolver {
+    constructor(private readonly cardsService: CardService) {}
 
     @Query(() => [Card])
     async getAllCards(): Promise<Card[]> {
