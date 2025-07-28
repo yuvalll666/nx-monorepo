@@ -5,10 +5,12 @@ import { CardModule } from "./card/card.module";
 import { PrismaModule } from "../prisma/prisma.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { UserModule } from "./user/user.module";
 
 @Module({
     imports: [
         CardModule,
+        UserModule,
         PrismaModule,
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,

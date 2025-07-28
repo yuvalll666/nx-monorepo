@@ -1,26 +1,27 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateCardDto, UpdateCardDto } from "@shared/types";
+import { Card } from "./models";
 
 @Injectable()
 export class CardService {
     constructor(private prisma: PrismaService) {}
 
-    async getAllCards() {
+    async getAllCards(): Promise<Card[]> {
         return this.prisma.card.findMany();
     }
 
-    async getCardsByDeck(deckId: string) {
+    async getCardsByDeck(deckId: string): Promise<Card[]> {
         return this.prisma.card.findMany({
             where: { deckId },
         });
     }
 
-    async createCard(data: CreateCardDto) {
+    async createCard(data: CreateCardDto): Promise<Card> {
         return this.prisma.card.create({ data });
     }
 
-    async updateCard(id: string, data: UpdateCardDto) {
+    async updateCard(id: string, data: UpdateCardDto): Promise<Card> {
         return this.prisma.card.update({
             where: {
                 id,
