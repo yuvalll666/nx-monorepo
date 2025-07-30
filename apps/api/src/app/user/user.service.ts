@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { CreateUserDto } from "@shared/types";
+import { CreateUserDto } from "@shared/dto";
 import * as bcrypt from "bcrypt";
 import { User } from "./models";
 

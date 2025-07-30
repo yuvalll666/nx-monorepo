@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "data-models": {
+      "type": "library",
+      "root": "libs/data-models",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-models/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-models/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
+}

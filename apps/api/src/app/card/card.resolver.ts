@@ -1,12 +1,12 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { CardService } from "./card.service";
-import { Card } from "./models";
+import { Card } from "@shared/models";
 import {
     CreateCardDto,
     createCardSchema,
     UpdateCardDto,
     updateCardSchema,
-} from "@shared/types";
+} from "@shared/dto";
 import { CreateCardInput, UpdateCardInput } from "./dto";
 
 @Resolver(() => Card)
