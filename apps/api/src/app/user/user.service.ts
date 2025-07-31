@@ -2,11 +2,15 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateUserDto } from "@shared/dto";
 import * as bcrypt from "bcrypt";
-import { User } from "./models";
+import { User } from "@shared/models";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UserService {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private configService: ConfigService
+    ) {}
 
     async findById(userId: string): Promise<User> {
         return this.prisma.user.findUnique({ where: { id: userId } });
@@ -19,7 +23,7 @@ export class UserService {
     async createUser(createUserData: CreateUserDto): Promise<User> {
         const { email, password } = createUserData;
 
-        const existingUser = this.prisma.user.findUnique({
+        const existingUser = await this.prisma.user.findUnique({
             where: {
                 email,
             },
@@ -29,7 +33,9 @@ export class UserService {
             throw new BadRequestException("Email already in use");
         }
 
-        const saltRounds = 10;
+        const saltRounds = this.configService.get<string>(
+            "auth.password.saltRound"
+        );
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         return this.prisma.user.create({

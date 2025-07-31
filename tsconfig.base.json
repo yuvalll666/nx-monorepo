@@ -15,7 +15,7 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@my-workspace/libs": ["libs/src/index.ts"],
+            "@api/auth": ["libs/auth/src/index.ts"],
             "@shared/dto": ["libs/shared/src/dto/index.ts"],
             "@shared/models": ["libs/shared/src/graphql/models/index.ts"],
         }
