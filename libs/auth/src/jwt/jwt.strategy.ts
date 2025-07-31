@@ -7,7 +7,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(config: ConfigService) {
         const jwtSecret = config.get<string>("auth.jwt.secret") || "my_secret";
-        console.log("in strategy constructor")
+
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
@@ -16,7 +16,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-        console.log("in validate => payload => ", payload)
         // Attach this to req.user
         return payload;
     }

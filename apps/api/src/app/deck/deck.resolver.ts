@@ -1,40 +1,57 @@
-import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
+import {
+    Resolver,
+    Query,
+    Mutation,
+    Args,
+    ResolveField,
+    Parent,
+} from "@nestjs/graphql";
 import { DeckService } from "./deck.service";
-import { CreateDeckInput } from "./dto/create-deck.dto";
-import { Deck } from "@shared/models";
-import { CreateDeckDto, deckSchema } from "@shared/dto";
+import { CreateDeckInput, UpdateDeckInput } from "./dto/deck-crud.dto";
+import { Card, Deck } from "@shared/models";
+import {
+    CreateDeckDto,
+    createDeckSchema,
+    UpdateDeckDto,
+    updateDeckSchema,
+} from "@shared/dto";
 import { UseGuards } from "@nestjs/common";
 import { CurrentUser, GqlAuthGuard, IUser } from "@api/auth";
+import { CardLoader } from "../card";
 
 @Resolver(() => Deck)
+@UseGuards(GqlAuthGuard)
 export class DeckResolver {
-    constructor(private readonly deckService: DeckService) {}
+    constructor(
+        private readonly deckService: DeckService,
+        private cardLoader: CardLoader
+    ) {}
 
-    @Mutation(() => Deck)
-    async createDeck(@Args("data") data: CreateDeckInput) {
-        const parsed: CreateDeckDto = deckSchema.parse(data);
-        return this.deckService.createDeck("1", parsed);
-    }
-
-    @UseGuards(GqlAuthGuard)
-    @Query(() => String)
-    async getAllDecksByUserId(@CurrentUser() user: IUser) {
+    @Query(() => [Deck])
+    async getAllDecksByUserId(@CurrentUser() user: IUser): Promise<Deck[]> {
         return this.deckService.getAllDecksByUserId(user.id);
     }
 
-    // @Mutation(() => User)
-    // async createUser(@Args("createUserData") createUserData: CreateUserInput) {
-    //     const parsed: CreateUserDto = createUserSchema.parse(createUserData);
-    //     return this.deckService.createUser(parsed);
-    // }
+    @ResolveField(() => [Card], { nullable: true })
+    async cards(@Parent() deck: Deck): Promise<Card[]> {
+        return this.cardLoader.cardsByDeckId.load(deck.id);
+    }
 
-    // @Query(() => [User])
-    // async getAllUsers(): Promise<User[]> {
-    //     return this.deckService.findAll();
-    // }
+    @Mutation(() => Deck)
+    async createDeck(
+        @CurrentUser() user: IUser,
+        @Args("data") data: CreateDeckInput
+    ): Promise<Deck> {
+        const parsed: CreateDeckDto = createDeckSchema.parse(data);
+        return this.deckService.createDeck(user.id, parsed);
+    }
 
-    // @Query(() => User)
-    // async getUserById(@Args("id") id: string): Promise<User> {
-    //     return this.deckService.findById(id);
-    // }
+    @Mutation(() => Deck)
+    async updateDeck(
+        @CurrentUser() user: IUser,
+        @Args("data") data: UpdateDeckInput
+    ): Promise<Deck> {
+        const parsed: UpdateDeckDto = updateDeckSchema.parse(data);
+        return this.deckService.updateDeck(user.id, parsed);
+    }
 }

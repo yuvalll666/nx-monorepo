@@ -11,9 +11,19 @@ export class CardService {
         return this.prisma.card.findMany();
     }
 
-    async getCardsByDeck(deckId: string): Promise<Card[]> {
+    async getCardsByDeckId(deckId: string): Promise<Card[]> {
         return this.prisma.card.findMany({
             where: { deckId },
+        });
+    }
+
+    async getCardsByDeckIds(deckIds: string[]): Promise<Card[]> {
+        return this.prisma.card.findMany({
+            where: {
+                deckId: {
+                    in: deckIds,
+                },
+            },
         });
     }
 

@@ -20,7 +20,7 @@ export class CardResolver {
 
     @Query(() => [Card])
     async getCardsByDeck(@Args("deckId") deckId: string): Promise<Card[]> {
-        return this.cardsService.getCardsByDeck(deckId);
+        return this.cardsService.getCardsByDeckId(deckId);
     }
 
     @Mutation(() => Card)
