@@ -1,7 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { CreateCardDto, UpdateCardDto } from "@shared/dto";
-import { Card } from "@shared/models";
+import {
+    CreateCardDto,
+    DeckIdDto,
+    DeckIdsDto,
+    UpdateCardDto,
+} from "@shared/dto";
+import { Card } from "@shared/graphql";
 
 @Injectable()
 export class CardService {
@@ -11,13 +16,17 @@ export class CardService {
         return this.prisma.card.findMany();
     }
 
-    async getCardsByDeckId(deckId: string): Promise<Card[]> {
+    async getCardsByDeckId(data: DeckIdDto): Promise<Card[]> {
+        const { deckId } = data;
+
         return this.prisma.card.findMany({
             where: { deckId },
         });
     }
 
-    async getCardsByDeckIds(deckIds: string[]): Promise<Card[]> {
+    async getCardsByDeckIds(data: DeckIdsDto): Promise<Card[]> {
+        const { deckIds } = data;
+
         return this.prisma.card.findMany({
             where: {
                 deckId: {
@@ -31,16 +40,27 @@ export class CardService {
         return this.prisma.card.create({ data });
     }
 
-    async updateCard(id: string, data: UpdateCardDto): Promise<Card> {
+    async updateCard(data: UpdateCardDto): Promise<Card> {
+        const { id, ...updateFields } = data;
+
         return this.prisma.card.update({
             where: {
                 id,
             },
-            data,
+            data: updateFields,
         });
     }
 
-    async softDeleteCard() {}
+    async softDeleteCard(id: string) {
+        return this.prisma.card.update({
+            where: {
+                id,
+            },
+            data: {
+                isTrashed: true,
+            },
+        });
+    }
 
     async permanentlyDeletCard() {}
 

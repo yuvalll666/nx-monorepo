@@ -16,8 +16,8 @@
         "baseUrl": ".",
         "paths": {
             "@api/auth": ["libs/auth/src/index.ts"],
-            "@shared/dto": ["libs/shared/src/dto/index.ts"],
-            "@shared/models": ["libs/shared/src/graphql/models/index.ts"],
+            "@shared/dto": ["libs/shared/src/schema/index.ts"],
+            "@shared/graphql": ["libs/shared/src/graphql/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

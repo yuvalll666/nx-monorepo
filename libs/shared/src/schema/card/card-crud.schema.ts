@@ -16,6 +16,7 @@ export const createCardSchema = z.object({
 });
 
 export const updateCardSchema = z.object({
+    id: z.uuid(),
     front: z.string().optional(),
     back: z.string().optional(),
     tags: z.array(z.string()).optional(),

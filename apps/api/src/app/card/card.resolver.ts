@@ -1,13 +1,14 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { CardService } from "./card.service";
-import { Card } from "@shared/models";
+import { Card, DeckIdInput } from "@shared/graphql";
 import {
     CreateCardDto,
     createCardSchema,
+    deckIdSchema,
     UpdateCardDto,
     updateCardSchema,
 } from "@shared/dto";
-import { CreateCardInput, UpdateCardInput } from "./dto";
+import { CreateCardInput, UpdateCardInput } from "./graphql";
 
 @Resolver(() => Card)
 export class CardResolver {
@@ -19,8 +20,9 @@ export class CardResolver {
     }
 
     @Query(() => [Card])
-    async getCardsByDeck(@Args("deckId") deckId: string): Promise<Card[]> {
-        return this.cardsService.getCardsByDeckId(deckId);
+    async getCardsByDeckId(@Args("input") input: DeckIdInput): Promise<Card[]> {
+        const parsed = deckIdSchema.parse(input);
+        return this.cardsService.getCardsByDeckId(parsed);
     }
 
     @Mutation(() => Card)
@@ -30,15 +32,13 @@ export class CardResolver {
     }
 
     @Mutation(() => Card)
-    updateCard(
-        @Args("id") id: string,
-        @Args("data") data: UpdateCardInput
-    ): Promise<Card> {
+    updateCard(@Args("data") data: UpdateCardInput): Promise<Card> {
         const parsed: UpdateCardDto = updateCardSchema.parse(data);
-        return this.cardsService.updateCard(id, parsed);
+        return this.cardsService.updateCard(parsed);
     }
 
-    async softDeleteCard() {}
+    @Mutation(() => Card)
+    async softDeleteCard(@Args("id") id: string) {}
 
     async permanentlyDeletCard() {}
 

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateDeckDto, UpdateDeckDto } from "@shared/dto";
-import { Deck } from "@shared/models";
+import { Deck } from "@shared/graphql";
 
 @Injectable()
 export class DeckService {

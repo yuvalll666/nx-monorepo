@@ -7,8 +7,8 @@ import {
     Parent,
 } from "@nestjs/graphql";
 import { DeckService } from "./deck.service";
-import { CreateDeckInput, UpdateDeckInput } from "./dto/deck-crud.dto";
-import { Card, Deck } from "@shared/models";
+import { CreateDeckInput, UpdateDeckInput } from "./graphql/deck-crud.dto";
+import { Card, Deck } from "@shared/graphql";
 import {
     CreateDeckDto,
     createDeckSchema,

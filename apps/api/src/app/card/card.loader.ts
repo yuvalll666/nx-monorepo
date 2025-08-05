@@ -1,7 +1,7 @@
 import DataLoader from "dataloader";
 import { Injectable, Scope } from "@nestjs/common";
 import { CardService } from "../card/card.service";
-import { Card } from "@shared/models";
+import { Card } from "@shared/graphql";
 
 @Injectable({ scope: Scope.REQUEST }) // Ensures one instance per request
 export class CardLoader {
@@ -9,16 +9,16 @@ export class CardLoader {
 
     public readonly cardsByDeckId = new DataLoader<string, Card[]>(
         async (deckIds: readonly string[]) => {
-            const cards = await this.cardService.getCardsByDeckIds(
-                deckIds as string[]
-            );
+            const cards = await this.cardService.getCardsByDeckIds({
+                deckIds: deckIds as string[],
+            });
 
             const map = new Map<string, Card[]>();
             for (const card of cards) {
                 if (!map.has(card.deckId)) {
                     map.set(card.deckId, []);
                 }
-                
+
                 map.get(card.deckId)!.push(card);
             }
 
