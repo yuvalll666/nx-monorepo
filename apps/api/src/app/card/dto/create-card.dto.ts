@@ -8,8 +8,8 @@ export class CreateCardInput {
     @Field()
     back: string;
 
-    @Field(() => [String])
-    tags: string[];
+    @Field(() => [String], { nullable: true })
+    tags?: string[];
 
     @Field()
     deckId: string;

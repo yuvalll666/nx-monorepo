@@ -20,8 +20,8 @@ export class UserService {
         return this.prisma.user.findMany();
     }
 
-    async createUser(createUserData: CreateUserDto): Promise<User> {
-        const { email, password } = createUserData;
+    async createUser(data: CreateUserDto): Promise<User> {
+        const { email, password } = data;
 
         const existingUser = await this.prisma.user.findUnique({
             where: {

@@ -39,4 +39,10 @@ export class CardService {
             data,
         });
     }
+
+    async softDeleteCard() {}
+
+    async permanentlyDeletCard() {}
+
+    async restoreCard() {}
 }

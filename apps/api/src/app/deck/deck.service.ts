@@ -10,6 +10,11 @@ export class DeckService {
     async createDeck(userId: string, data: CreateDeckDto): Promise<Deck> {
         const { title } = data;
 
+        console.log({
+            userId,
+            title,
+        });
+
         return this.prisma.deck.create({
             data: {
                 title,
@@ -39,4 +44,10 @@ export class DeckService {
             },
         });
     }
+
+    async softDeleteDeck() {}
+
+    async permanentlyDeletDeck() {}
+
+    async restoreDeck() {}
 }

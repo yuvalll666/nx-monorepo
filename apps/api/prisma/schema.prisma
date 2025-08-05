@@ -29,6 +29,8 @@ model Deck {
   user      User      @relation(fields: [userId], references: [id]) // Owner user relation
   userId    String                         // FK to user table
   cards     Card[]                         // One-to-many relation: deck has many cards
+  isTrashed  Boolean   @default(false)               // Soft delete flag for deck
+  trashedAt  DateTime?                               // When deck was trashed
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -42,6 +44,9 @@ model Card {
   tags        String[]                        // Tags for categorization/search
   interval    Int       @default(1)           // Days between reviews (spaced repetition)
   dueDate     DateTime?                       // Next review date
+  isTrashed     Boolean   @default(false)               // Soft delete flag for card
+  trashedAt     DateTime?                                // When card was trashed
+  deletedByDeck Boolean   @default(false)               // True if card was trashed as part of deck deletion
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

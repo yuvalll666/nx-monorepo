@@ -24,17 +24,23 @@ export class CardResolver {
     }
 
     @Mutation(() => Card)
-    createCard(@Args("input") input: CreateCardInput): Promise<Card> {
-        const parsed: CreateCardDto = createCardSchema.parse(input);
+    createCard(@Args("data") data: CreateCardInput): Promise<Card> {
+        const parsed: CreateCardDto = createCardSchema.parse(data);
         return this.cardsService.createCard(parsed);
     }
 
     @Mutation(() => Card)
     updateCard(
         @Args("id") id: string,
-        @Args("input") input: UpdateCardInput
+        @Args("data") data: UpdateCardInput
     ): Promise<Card> {
-        const parsed: UpdateCardDto = updateCardSchema.parse(input);
+        const parsed: UpdateCardDto = updateCardSchema.parse(data);
         return this.cardsService.updateCard(id, parsed);
     }
+
+    async softDeleteCard() {}
+
+    async permanentlyDeletCard() {}
+
+    async restoreCard() {}
 }

@@ -29,7 +29,7 @@ export class DeckResolver {
 
     @Query(() => [Deck])
     async getAllDecksByUserId(@CurrentUser() user: IUser): Promise<Deck[]> {
-        return this.deckService.getAllDecksByUserId(user.id);
+        return this.deckService.getAllDecksByUserId(user.sub);
     }
 
     @ResolveField(() => [Card], { nullable: true })
@@ -41,9 +41,9 @@ export class DeckResolver {
     async createDeck(
         @CurrentUser() user: IUser,
         @Args("data") data: CreateDeckInput
-    ): Promise<Deck> {
+    ) {
         const parsed: CreateDeckDto = createDeckSchema.parse(data);
-        return this.deckService.createDeck(user.id, parsed);
+        return this.deckService.createDeck(user.sub, parsed);
     }
 
     @Mutation(() => Deck)
@@ -52,6 +52,12 @@ export class DeckResolver {
         @Args("data") data: UpdateDeckInput
     ): Promise<Deck> {
         const parsed: UpdateDeckDto = updateDeckSchema.parse(data);
-        return this.deckService.updateDeck(user.id, parsed);
+        return this.deckService.updateDeck(user.sub, parsed);
     }
+
+    async softDeleteDeck() {}
+
+    async permanentlyDeletDeck() {}
+
+    async restoreDeck() {}
 }

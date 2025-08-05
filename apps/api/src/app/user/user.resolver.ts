@@ -9,8 +9,8 @@ export class UserResolver {
     constructor(private readonly userService: UserService) {}
 
     @Mutation(() => User)
-    async createUser(@Args("createUserData") createUserData: CreateUserInput) {
-        const parsed: CreateUserDto = createUserSchema.parse(createUserData);
+    async createUser(@Args("data") data: CreateUserInput) {
+        const parsed: CreateUserDto = createUserSchema.parse(data);
         return this.userService.createUser(parsed);
     }
 
