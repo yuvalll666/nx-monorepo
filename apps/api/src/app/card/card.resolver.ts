@@ -1,7 +1,14 @@
 import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { CardService } from "./card.service";
-import { Card, DeckIdInput } from "@shared/graphql";
 import {
+    Card,
+    CardIdInput,
+    CommonResponse,
+    DeckIdInput,
+} from "@shared/graphql";
+import {
+    CardIdDto,
+    cardIdSchema,
     CreateCardDto,
     createCardSchema,
     deckIdSchema,
@@ -26,21 +33,29 @@ export class CardResolver {
     }
 
     @Mutation(() => Card)
-    createCard(@Args("data") data: CreateCardInput): Promise<Card> {
-        const parsed: CreateCardDto = createCardSchema.parse(data);
+    createCard(@Args("input") input: CreateCardInput): Promise<Card> {
+        const parsed: CreateCardDto = createCardSchema.parse(input);
         return this.cardsService.createCard(parsed);
     }
 
     @Mutation(() => Card)
-    updateCard(@Args("data") data: UpdateCardInput): Promise<Card> {
-        const parsed: UpdateCardDto = updateCardSchema.parse(data);
+    updateCard(@Args("input") input: UpdateCardInput): Promise<Card> {
+        const parsed: UpdateCardDto = updateCardSchema.parse(input);
         return this.cardsService.updateCard(parsed);
     }
 
     @Mutation(() => Card)
-    async softDeleteCard(@Args("id") id: string) {}
+    async softDeleteCard(@Args("input") input: CardIdInput) {
+        const parsed: CardIdDto = cardIdSchema.parse(input);
+        return this.cardsService.softDeleteCard(parsed);
+    }
 
-    async permanentlyDeletCard() {}
+    async restoreCard(@Args("input") input: CardIdInput) {
+        const parsed: CardIdDto = cardIdSchema.parse(input);
+        return this.cardsService.restoreCard(parsed);
+    }
 
-    async restoreCard() {}
+    // TODO - create function and allow only admin access
+    @Mutation(() => CommonResponse)
+    async permanentlyDeleteCards() {}
 }

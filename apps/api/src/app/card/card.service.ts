@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import {
+    CardIdDto,
     CreateCardDto,
     DeckIdDto,
     DeckIdsDto,
@@ -12,8 +13,27 @@ import { Card } from "@shared/graphql";
 export class CardService {
     constructor(private prisma: PrismaService) {}
 
+    async createCard(data: CreateCardDto): Promise<Card> {
+        return this.prisma.card.create({ data });
+    }
+
+    async updateCard(data: UpdateCardDto): Promise<Card> {
+        const { id, ...updateFields } = data;
+
+        return this.prisma.card.update({
+            where: {
+                id,
+            },
+            data: updateFields,
+        });
+    }
+
     async getAllCards(): Promise<Card[]> {
-        return this.prisma.card.findMany();
+        return this.prisma.card.findMany({
+            where: {
+                isTrashed: false,
+            },
+        });
     }
 
     async getCardsByDeckId(data: DeckIdDto): Promise<Card[]> {
@@ -36,33 +56,21 @@ export class CardService {
         });
     }
 
-    async createCard(data: CreateCardDto): Promise<Card> {
-        return this.prisma.card.create({ data });
-    }
+    async softDeleteCard(data: CardIdDto) {
+        const { cardId } = data;
 
-    async updateCard(data: UpdateCardDto): Promise<Card> {
-        const { id, ...updateFields } = data;
-
-        return this.prisma.card.update({
-            where: {
-                id,
-            },
-            data: updateFields,
+        return this.updateCard({
+            id: cardId,
+            isTrashed: true,
         });
     }
 
-    async softDeleteCard(id: string) {
-        return this.prisma.card.update({
-            where: {
-                id,
-            },
-            data: {
-                isTrashed: true,
-            },
+    async restoreCard(data: CardIdDto) {
+        const { cardId } = data;
+
+        return this.updateCard({
+            id: cardId,
+            isTrashed: false,
         });
     }
-
-    async permanentlyDeletCard() {}
-
-    async restoreCard() {}
 }

@@ -30,6 +30,7 @@ export const updateCardSchema = z.object({
             z.date()
         )
         .optional(),
+    isTrashed: z.boolean().optional(),
 });
 
 export type CreateCardDto = z.infer<typeof createCardSchema>;
