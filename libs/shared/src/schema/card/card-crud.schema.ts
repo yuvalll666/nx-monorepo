@@ -16,7 +16,7 @@ export const createCardSchema = z.object({
 });
 
 export const updateCardSchema = z.object({
-    id: z.uuid(),
+    cardId: z.uuid(),
     front: z.string().optional(),
     back: z.string().optional(),
     tags: z.array(z.string()).optional(),
@@ -31,6 +31,7 @@ export const updateCardSchema = z.object({
         )
         .optional(),
     isTrashed: z.boolean().optional(),
+    trashedAt: z.date().optional(),
 });
 
 export type CreateCardDto = z.infer<typeof createCardSchema>;

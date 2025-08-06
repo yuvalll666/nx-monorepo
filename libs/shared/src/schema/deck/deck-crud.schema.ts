@@ -6,7 +6,9 @@ export const createDeckSchema = z.object({
 
 export const updateDeckSchema = z.object({
     deckId: z.uuid(),
-    title: z.string().min(1),
+    title: z.string().min(1).optional(),
+    isTrashed: z.boolean().optional(),
+    trashedAt: z.date().optional(),
 });
 
 export type CreateDeckDto = z.infer<typeof createDeckSchema>;

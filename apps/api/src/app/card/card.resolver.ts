@@ -45,12 +45,12 @@ export class CardResolver {
     }
 
     @Mutation(() => Card)
-    async softDeleteCard(@Args("input") input: CardIdInput) {
+    async softDeleteCard(@Args("input") input: CardIdInput): Promise<Card> {
         const parsed: CardIdDto = cardIdSchema.parse(input);
         return this.cardsService.softDeleteCard(parsed);
     }
 
-    async restoreCard(@Args("input") input: CardIdInput) {
+    async restoreCard(@Args("input") input: CardIdInput): Promise<Card> {
         const parsed: CardIdDto = cardIdSchema.parse(input);
         return this.cardsService.restoreCard(parsed);
     }
